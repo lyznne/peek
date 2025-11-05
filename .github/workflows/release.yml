@@ -1,7 +1,5 @@
 name: release-peek
 
-
-
 on:
   push:
     tags:
@@ -13,12 +11,9 @@ env:
   AUR_EMAIL: "emuthiani26@gmail.com"
   AUR_USER: "lyznne"
 
-
 jobs:
   build:
     name: Build and Upload Release Assets
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         include:
@@ -28,6 +23,8 @@ jobs:
             target: x86_64-apple-darwin
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -40,10 +37,15 @@ jobs:
         run: cargo build --release --locked --target ${{ matrix.target }}
 
       - name: Package binary
+        shell: bash
         run: |
-          mkdir dist
+          mkdir -p dist
           cd target/${{ matrix.target }}/release
-          tar czf ../../../dist/peek-${{ matrix.target }}.tar.gz peek
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            zip -r ../../../dist/peek-${{ matrix.target }}.zip peek.exe
+          else
+            tar czf ../../../dist/peek-${{ matrix.target }}.tar.gz peek
+          fi
           cd ../../../
 
       - name: Upload binaries to GitHub Release
@@ -78,12 +80,10 @@ jobs:
           cp PKGBUILD aur-repo/
           cd aur-repo
 
-          # Auto-update pkgver and pkgrel based on the git tag
           VERSION="${GITHUB_REF_NAME#v}"
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
 
-          # Re-generate .SRCINFO
           makepkg --printsrcinfo > .SRCINFO
 
       - name: Push updates to AUR
@@ -92,7 +92,7 @@ jobs:
           git config user.name "${AUR_USER}"
           git config user.email "${AUR_EMAIL}"
           git add PKGBUILD .SRCINFO
-          git commit -m "Release ${GITHUB_REF_NAME}"
+          git commit -m "Release ${GITHUB_REF_NAME}" || echo "No changes to commit"
           git push
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/aur -o StrictHostKeyChecking=no"
