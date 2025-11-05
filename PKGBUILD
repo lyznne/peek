@@ -1,15 +1,21 @@
 # Maintainer: enos muthiani @lyznne <emuthiani26@gmail.com>
-pkgname=peek
+pkgname=peek-cli
 pkgver=0.1.0
 pkgrel=1
 pkgdesc="A simple file viewer that opens files in the default web browser."
-arch= ('x86_64')
+arch=('x86_64')
 url="https://github.com/lyznne/peek"
-license=('MIT', 'Apache-2.0')
+license=('MIT' 'Apache-2.0')
 depends=('gcc-libs')
 makedepends=('cargo' 'rust' )
 source=("$pkgname-$pkgver.tar.gz::https://github.com/lyznne/$pkgname/archive/v$pkgver.tar.gz")
 sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$pkgname-$pkgver" || return
+    # Example output: 0.1.0.r3.gabcdef
+    git describe --tags --match 'v[0-9]*' --abbrev=7 | sed 's/^v//; s/-/./g'
+}
 
 build() {
     cd "$pkgname-$pkgver"

@@ -28,5 +28,5 @@ strip = true
 panic = "abort"
 
 [[bin]]
-name = "peek"
+name = "peek-cli"
 path = "src/main.rs"
