@@ -80,7 +80,7 @@ jobs:
             tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
           fi
 
-  
+
       - name: Verify binary built
         shell: bash
         run: |
@@ -146,6 +146,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+
   aur:
     name: Update AUR Package
     needs: release
@@ -159,7 +160,7 @@ jobs:
       - name: Setup SSH for AUR
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ACCESS_PEEK }}" > ~/.ssh/aur_key
+          echo "${{ secrets.PEEK_ACCESS }}" > ~/.ssh/aur_key
           chmod 600 ~/.ssh/aur_key
           ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
 
