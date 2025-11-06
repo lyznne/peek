@@ -59,13 +59,29 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          cd target/${{ matrix.target }}/release
+          cd target/${{ matrix.target }}/release || exit 1
+
+          echo "Files in release dir:"
+          ls -lah
+
+          BIN="peek"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            BIN="peek.exe"
+          fi
+
+          if [ ! -f "$BIN" ]; then
+            echo " Error: binary '$BIN' not found in target/${{ matrix.target }}/release"
+            exit 1
+          fi
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            7z a ../../../dist/peek-${{ matrix.name }}.zip peek.exe
+            7z a ../../../dist/peek-${{ matrix.name }}.zip "$BIN"
           else
-            tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz peek
+            tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
           fi
+
+      - name: Verify binary built
+        run: ls -lah target/${{ matrix.target }}/release
 
       - name: Generate checksums
         shell: bash
