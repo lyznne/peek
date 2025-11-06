@@ -9,7 +9,7 @@ url="https://github.com/lyznne/peek"
 license=('MIT' 'Apache-2.0')
 depends=('gcc-libs')
 makedepends=('cargo' 'rust' )
-source=("$pkgname-$pkgver.tar.gz::https://github.com/lyznne/$project/archive/v$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/lyznne/$project/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 pkgver() {
