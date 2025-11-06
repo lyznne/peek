@@ -199,11 +199,16 @@ jobs:
 
       - name: Generate .SRCINFO
         run: |
-          sudo apt-get update
-          sudo apt-get install -y fakeroot make gcc pkg-config
+            cd aur-repo
+            docker run --rm -v "$(pwd):/pkg" archlinux:latest bash -c "
+              pacman -Sy --noconfirm base-devel git
+              useradd -m builder
+              chown -R builder:builder /pkg
+              cd /pkg
+              su builder -c 'makepkg --printsrcinfo > .SRCINFO'
+            "
+            sudo chown -R $(id -u):$(id -g) .
 
-          cd aur-repo
-          makepkg --printsrcinfo > .SRCINFO
 
       - name: Commit and push to AUR
         run: |
