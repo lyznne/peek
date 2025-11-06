@@ -64,9 +64,9 @@ jobs:
           echo "Files in release dir:"
           ls -lah
 
-          BIN="peek"
+          BIN="peek-cli"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            BIN="peek.exe"
+            BIN="peek-cli.exe"
           fi
 
           if [ ! -f "$BIN" ]; then
