@@ -80,8 +80,13 @@ jobs:
             tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
           fi
 
+  
       - name: Verify binary built
-        run: ls -lah target/${{ matrix.target }}/release
+        shell: bash
+        run: |
+          echo "Listing build directory:"
+          ls -lah target/${{ matrix.target }}/release || dir target\\${{ matrix.target }}\\release
+
 
       - name: Generate checksums
         shell: bash
