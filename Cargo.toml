@@ -1,6 +1,6 @@
 [package]
 name = "peek-cli"
-version = "0.1.10"
+version = "0.1.12"
 edition = "2024"
 authors = ["Enos Muthiani @lyznne <emuthiani26@gmail.com>"]
 description = "A fast CLI tool to open files and directories in your default browser"

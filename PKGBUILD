@@ -12,10 +12,7 @@ makedepends=('cargo' 'rust')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/lyznne/${project}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
-pkgver() {
-    cd "${srcdir}/${project}-${pkgver}" || return
-    git describe --tags --match 'v[0-9]*' --abbrev=7 | sed 's/^v//; s/-/./g'
-}
+
 
 build() {
     cd "${srcdir}/${project}-${pkgver}"
