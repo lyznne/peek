@@ -1,71 +1,228 @@
-name: release-peek
+name: Release
 
 on:
   push:
     tags:
-      - "v*" # Trigger when version tag like v1.0.0 is pushed
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
-  release:
-    name: Build and Release Peek
-    runs-on: ubuntu-latest
-
+  build:
+    name: Build Release Assets
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            name: linux-x86_64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            name: linux-x86_64-musl
           - os: macos-latest
             target: x86_64-apple-darwin
+            name: macos-x86_64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            name: macos-arm64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            name: windows-x86_64
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: install rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Build release binary
-        run: cargo build --release --target ${{ matrix.target }}
-      - name: Prepare artifact
-        run: |
-          mkdir dist
-          cd target/${{ matrix.target }}/release
-          tar czf ../../../dist/peek-${{ matrix.target }}.tar.gz peek
-          cd ../../../
 
-      - name: Upload artifact
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install musl tools (Linux musl only)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Build release binary
+        run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Strip binary (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          strip target/${{ matrix.target }}/release/peek || true
+
+      - name: Package binary
+        shell: bash
+        run: |
+          mkdir -p dist
+          cd target/${{ matrix.target }}/release || exit 1
+
+          echo "Files in release dir:"
+          ls -lah
+
+          BIN="peek-cli"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            BIN="peek-cli.exe"
+          fi
+
+          if [ ! -f "$BIN" ]; then
+            echo " Error: binary '$BIN' not found in target/${{ matrix.target }}/release"
+            exit 1
+          fi
+
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            cp "$BIN" peek.exe
+            7z a ../../../dist/peek-${{ matrix.name }}.zip "$BIN" peek.exe
+          else
+            tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
+          fi
+
+
+      - name: Verify binary built
+        shell: bash
+        run: |
+          echo "Listing build directory:"
+          ls -lah target/${{ matrix.target }}/release || dir target\\${{ matrix.target }}\\release
+
+
+      - name: Generate checksums
+        shell: bash
+        run: |
+          cd dist
+          if command -v sha256sum > /dev/null; then
+            sha256sum peek-${{ matrix.name }}.* > peek-${{ matrix.name }}.sha256
+          else
+            shasum -a 256 peek-${{ matrix.name }}.* > peek-${{ matrix.name }}.sha256
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: peek-${{ matrix.name }}
+          path: dist/*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p dist
+          find artifacts -type f -exec cp {} dist/ \;
+          ls -lah dist/
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -f CHANGELOG.md ]; then
+            awk "/## \[${VERSION}\]/,/## \[/" CHANGELOG.md | sed '1d;$d' > release_notes.md
+          else
+            echo "Release ${VERSION}" > release_notes.md
+          fi
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+
   aur:
-    name: Package for Arch Linux
-    runs-on: ubuntu-latest
+    name: Update AUR Package
     needs: release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dArch packaging tools
-        run: sudo apt-get update && sudo apt-get install -y base-devel fakeroot
-
-      - name: Build AUR package
+      - name: Setup SSH for AUR
         run: |
-          tar czf peek-aur.tar.gz PKGBUILD
-          echo "Arch package source prepared: peek-aur.tar.gz"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PEEK_ACCESS }}" > ~/.ssh/aur_key
+          chmod 600 ~/.ssh/aur_key
+          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
 
-      - name: Update PKGBUILD version
+          # Configure git to use the SSH key
+          cat > ~/.ssh/config << EOF
+          Host aur.archlinux.org
+            IdentityFile ~/.ssh/aur_key
+            User aur
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Clone AUR repository
         run: |
-            VERSION="${GITHUB_REF_NAME#v}"
-            sed -i "s/pkgver=.*/pkgver=${VERSION}/" PKGBUILD
-            sed -i "s/pkgrel=.*/pkgrel=1/" PKGBUILD
+          git clone ssh://aur@aur.archlinux.org/peek-cli.git aur-repo || {
+            echo "Failed to clone AUR repo. Make sure the package exists on AUR first!"
+            exit 1
+          }
 
-      - name: Upload PKGBUILD to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: peek-aur.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update PKGBUILD
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          # Copy updated PKGBUILD
+          cp PKGBUILD aur-repo/
+
+          cd aur-repo
+
+          # Update version
+          sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
+          sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+
+          # Calculate SHA256 of the source tarball
+          TARBALL_URL="https://github.com/${{ github.repository }}/archive/v${VERSION}.tar.gz"
+          SHA256=$(curl -sL "$TARBALL_URL" | sha256sum | awk '{print $1}')
+          sed -i "s/sha256sums=('.*')/sha256sums=('${SHA256}')/" PKGBUILD
+
+      - name: Generate .SRCINFO
+        run: |
+            cd aur-repo
+            docker run --rm -v "$(pwd):/pkg" archlinux:latest bash -c "
+              pacman -Sy --noconfirm base-devel git
+              useradd -m builder
+              chown -R builder:builder /pkg
+              cd /pkg
+              su builder -c 'makepkg --printsrcinfo > .SRCINFO'
+            "
+            sudo chown -R $(id -u):$(id -g) .
+
+
+      - name: Commit and push to AUR
+        run: |
+          cd aur-repo
+
+          git config user.name "lyznne"
+          git config user.email "emuthiani26@gmail.com"
+
+          git add PKGBUILD .SRCINFO
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update to ${GITHUB_REF_NAME}"
+            git push origin master
+          fi

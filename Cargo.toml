@@ -1,13 +1,13 @@
 [package]
-name = "peek"
-version = "0.1.0"
+name = "peek-cli"
+version = "0.1.12"
 edition = "2024"
 authors = ["Enos Muthiani @lyznne <emuthiani26@gmail.com>"]
 description = "A fast CLI tool to open files and directories in your default browser"
 license = "MIT or Apache-2.0"
 repository = "https://github.com/lyznne/peek"
-keywords = ["cli", "browser", "open","file-viewer", "utility", "files", "directories"]
-categories = ["command-line-utilities", "file-management"]
+keywords = ["cli", "browser", "file-viewer", "utility", "files"]
+categories = ["command-line-utilities", "filesystem"]
 
 
 [dependencies]
@@ -28,5 +28,5 @@ strip = true
 panic = "abort"
 
 [[bin]]
-name = "peek"
+name = "peek-cli"
 path = "src/main.rs"
