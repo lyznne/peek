@@ -231,5 +231,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update to ${GITHUB_REF_NAME}"
-            git push origin main
+            git push origin master
           fi
