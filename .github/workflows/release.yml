@@ -84,23 +84,24 @@ jobs:
           mkdir -p dist
           cd target/${{ matrix.target }}/release || exit 1
 
-          echo "Files in release dir:"
-          ls -lah
-
           BIN="peek-cli"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
             BIN="peek-cli.exe"
           fi
 
-          if [ ! -f "$BIN" ]; then
-            echo "Error: binary '$BIN' not found in target/${{ matrix.target }}/release"
-            exit 1
-          fi
+          cp "$BIN" ../../../dist/
+
+          # Copy completions + license + readme (from repo root)
+          cp -r ../../../completions ../../../dist/
+          cp ../../../LICENSE ../../../dist/
+          cp ../../../README.md ../../../dist/
+
+          cd ../../../dist
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            7z a ../../../dist/peek-${{ matrix.name }}.zip "$BIN"
+            7z a "peek-${{ matrix.name }}.zip" peek-cli.exe completions/ LICENSE README.md
           else
-            tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
+            tar czf "peek-${{ matrix.name }}.tar.gz" peek-cli completions/ LICENSE README.md
           fi
 
       - name: Generate checksums
@@ -195,16 +196,40 @@ jobs:
       - name: Update PKGBUILD
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-
-          cp PKGBUILD aur-repo/
-
           cd aur-repo
 
+          # Copy fresh PKGBUILD from repo root
+          cp ../PKGBUILD .
+
+          # Update version & release
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
-          TARBALL_URL="https://github.com/${{ github.repository }}/archive/v${VERSION}.tar.gz"
-          SHA256=$(curl -sL "$TARBALL_URL" | sha256sum | awk '{print $1}')
-          sed -i "s/sha256sums=('.*')/sha256sums=('${SHA256}')/" PKGBUILD
+
+          # Define musl asset 
+          MUSL_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/peek-linux-x86_64-musl.tar.gz"
+
+          # Compute SHA256
+          SHA256_MUSL=$(curl -sL --fail "$MUSL_URL" | sha256sum | cut -d' ' -f1)
+          if [ -z "$SHA256_MUSL" ]; then
+            echo "Error: Failed to download or compute SHA256 for musl binary"
+            exit 1
+          fi
+
+          echo "Computed SHA256 (musl): $SHA256_MUSL"
+
+          # Replace source and sha256sums arrays completely
+          cat > temp_patch << 'EOF'
+          source=("${pkgname}-${pkgver}-linux-x86_64-musl.tar.gz::'"${MUSL_URL}"')
+          sha256sums=('"${SHA256_MUSL}"')
+          EOF
+
+          # Inject the new lines right after the existing source/sha256 lines
+          sed -i "/^source=(/r temp_patch" PKGBUILD
+          sed -i "/^sha256sums=(/d" PKGBUILD   # remove old sha256 line
+          rm temp_patch
+
+          # Optional: remove noextract if present (not needed for single source)
+          sed -i '/^noextract=/d' PKGBUILD
 
       - name: Generate .SRCINFO
         run: |
