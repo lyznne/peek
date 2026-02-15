@@ -146,7 +146,7 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           if [ -f CHANGELOG.md ]; then
-            awk "/## \[${VERSION}\]/,/## \[/" CHANGELOG.md | sed '1d;$d' > release_notes.md
+            awk "/## \[${VERSION}\]/ {flag=1; next} /^## \[/ {flag=0} flag" CHANGELOG.md > release_notes.md
           else
             echo "Release ${VERSION}" > release_notes.md
           fi
@@ -202,8 +202,7 @@ jobs:
 
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
-
-          TARBALL_URL="https://github.com/${{ github.repository }}/archive/v${VERSION}.tar.gz"
+          TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/tags/v${VERSION}.tar.gz"
           SHA256=$(curl -sL "$TARBALL_URL" | sha256sum | awk '{print $1}')
           sed -i "s/sha256sums=('.*')/sha256sums=('${SHA256}')/" PKGBUILD
 
@@ -232,5 +231,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update to ${GITHUB_REF_NAME}"
-            git push origin master
+            git push origin main
           fi

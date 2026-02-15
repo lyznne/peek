@@ -8,37 +8,45 @@ arch=('x86_64')
 url="https://github.com/lyznne/${project}"
 license=('MIT' 'Apache-2.0')
 depends=('gcc-libs')
-makedepends=('cargo' 'rust')
+makedepends=('cargo' 'rust' 'nodejs' 'pnpm')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/lyznne/${project}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('SKIP')
-
+sha256sums=('REPLACE_ME')
 
 
 build() {
     cd "${srcdir}/${project}-${pkgver}"
 
-     cd frontend
-    pnpm install --frozen-lockfile
-    pnpm build
+    # ── Frontend ──────────────────────────────────────────────────────────────
+    cd frontend
+
+    # --reporter=silent suppresses per-package install lines
+    # --ignore-scripts skips noisy postinstall hooks
+    pnpm install --frozen-lockfile --reporter=silent --ignore-scripts 2>/dev/null
+
+    pnpm build --silent 2>/dev/null
+
     cd ..
 
+    # ── Rust ──────────────────────────────────────────────────────────────────
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
-    cargo build --release --locked
+
+    cargo build --release --locked --quiet
 }
 
 check() {
     cd "${srcdir}/${project}-${pkgver}"
-    cargo test --release --locked
+    cargo test --release --locked --quiet
 }
 
 package() {
+    strip "${pkgdir}/usr/bin/${pkgname}" || true
     cd "${srcdir}/${project}-${pkgver}"
     install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
     install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 
-    # Install shell completions
+    # Shell completions
     install -Dm644 "completions/${pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
     install -Dm644 "completions/${pkgname}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
     install -Dm644 "completions/${pkgname}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
