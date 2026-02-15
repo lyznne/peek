@@ -1,9 +1,9 @@
 [package]
 name = "peek-cli"
-version = "0.1.12"
+version = "1.0.0"
 edition = "2024"
 authors = ["Enos Muthiani @lyznne <emuthiani26@gmail.com>"]
-description = "A fast CLI tool to open files and directories in your default browser"
+description = "A fast CLI tool to open files and directories in your default browser with CLI and web UI"
 license = "MIT or Apache-2.0"
 repository = "https://github.com/lyznne/peek"
 keywords = ["cli", "browser", "file-viewer", "utility", "files"]
@@ -11,14 +11,52 @@ categories = ["command-line-utilities", "filesystem"]
 
 
 [dependencies]
-clap= { version = "4.5", features = ["derive", "cargo"] }
-open= "5.3"
-anyhow= "1.0"
-thiserror= "2.0"
-walkdir= "2.3"
+# cli
+clap = { version = "4.5", features = ["derive", "cargo"] }
+anyhow = "1.0"
+thiserror = "2.0.18"
+
+# web server
+actix-web = "4.4"
+actix-ws = "0.3.1"
+actix-files = "0.6.1"
+actix-cors = "0.7"
+tokio = { version = "1.49", features = ["full"] }
+
+# serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.149"
+
+# file operation
+walkdir = "2.3"
+notify = "8.2.0"
+mime_guess = "2.0"
+chrono = { version = "0.4.43", features = ["serde"] }
+
+# embeded frondend
+include_dir =  { version = "0.7" , features = ["glob"] }
+
+# logging
+tracing = "0.1.41"
+tracing-core = "0.1.36"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+
+# utilities
+parking_lot = "0.12"
+dotenv = "0.15"
+open = "5.0"
+urlencoding = "2.1"
+
+# unix
+libc  = "0.2"
+dirs  = "6.0"
+
+# wins
+[target.'cfg(target_os = "windows")'.dependencies]
+winreg = "0.55"
 
 [dev-dependencies]
-tempfile= "3.10"
+tempfile = "3.25"
 
 [profile.release]
 opt-level = 3
@@ -26,6 +64,7 @@ lto = true
 codegen-units = 1
 strip = true
 panic = "abort"
+
 
 [[bin]]
 name = "peek-cli"
