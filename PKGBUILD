@@ -16,6 +16,12 @@ sha256sums=('SKIP')
 
 build() {
     cd "${srcdir}/${project}-${pkgver}"
+
+     cd frontend
+    pnpm install --frozen-lockfile
+    pnpm build
+    cd ..
+    
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
     cargo build --release --locked

@@ -36,6 +36,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        working-directory: frontend
+        run: pnpm build
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -47,13 +65,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y musl-tools
 
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
       - name: Build release binary
         run: cargo build --release --locked --target ${{ matrix.target }}
 
       - name: Strip binary (Unix)
         if: matrix.os != 'windows-latest'
         run: |
-          strip target/${{ matrix.target }}/release/peek || true
+          strip target/${{ matrix.target }}/release/peek-cli || true
 
       - name: Package binary
         shell: bash
@@ -70,24 +93,15 @@ jobs:
           fi
 
           if [ ! -f "$BIN" ]; then
-            echo " Error: binary '$BIN' not found in target/${{ matrix.target }}/release"
+            echo "Error: binary '$BIN' not found in target/${{ matrix.target }}/release"
             exit 1
           fi
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp "$BIN" peek.exe
-            7z a ../../../dist/peek-${{ matrix.name }}.zip "$BIN" peek.exe
+            7z a ../../../dist/peek-${{ matrix.name }}.zip "$BIN"
           else
             tar czf ../../../dist/peek-${{ matrix.name }}.tar.gz "$BIN"
           fi
-
-
-      - name: Verify binary built
-        shell: bash
-        run: |
-          echo "Listing build directory:"
-          ls -lah target/${{ matrix.target }}/release || dir target\\${{ matrix.target }}\\release
-
 
       - name: Generate checksums
         shell: bash
@@ -147,7 +161,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
   aur:
     name: Update AUR Package
     needs: release
@@ -165,7 +178,6 @@ jobs:
           chmod 600 ~/.ssh/aur_key
           ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
 
-          # Configure git to use the SSH key
           cat > ~/.ssh/config << EOF
           Host aur.archlinux.org
             IdentityFile ~/.ssh/aur_key
@@ -184,32 +196,28 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
 
-          # Copy updated PKGBUILD
           cp PKGBUILD aur-repo/
 
           cd aur-repo
 
-          # Update version
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
 
-          # Calculate SHA256 of the source tarball
           TARBALL_URL="https://github.com/${{ github.repository }}/archive/v${VERSION}.tar.gz"
           SHA256=$(curl -sL "$TARBALL_URL" | sha256sum | awk '{print $1}')
           sed -i "s/sha256sums=('.*')/sha256sums=('${SHA256}')/" PKGBUILD
 
       - name: Generate .SRCINFO
         run: |
-            cd aur-repo
-            docker run --rm -v "$(pwd):/pkg" archlinux:latest bash -c "
-              pacman -Sy --noconfirm base-devel git
-              useradd -m builder
-              chown -R builder:builder /pkg
-              cd /pkg
-              su builder -c 'makepkg --printsrcinfo > .SRCINFO'
-            "
-            sudo chown -R $(id -u):$(id -g) .
-
+          cd aur-repo
+          docker run --rm -v "$(pwd):/pkg" archlinux:latest bash -c "
+            pacman -Sy --noconfirm base-devel git
+            useradd -m builder
+            chown -R builder:builder /pkg
+            cd /pkg
+            su builder -c 'makepkg --printsrcinfo > .SRCINFO'
+          "
+          sudo chown -R $(id -u):$(id -g) .
 
       - name: Commit and push to AUR
         run: |

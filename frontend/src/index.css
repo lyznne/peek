@@ -1,0 +1,429 @@
+@import "tailwindcss";
+
+/* Light theme variables - inside @theme block */
+@theme {
+  --color-background: hsl(0 0% 98%);
+  --color-foreground: hsl(240 10% 10%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(240 10% 10%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(240 10% 10%);
+
+  --color-primary: hsl(239 84% 67%);
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  --color-secondary: hsl(240 5% 96%);
+  --color-secondary-foreground: hsl(240 10% 30%);
+
+  --color-muted: hsl(240 5% 96%);
+  --color-muted-foreground: hsl(240 5% 45%);
+
+  --color-accent: hsl(239 84% 67%);
+  --color-accent-foreground: hsl(0 0% 100%);
+
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+
+  --color-border: hsl(240 6% 90%);
+  --color-input: hsl(240 6% 90%);
+  --color-ring: hsl(239 84% 67%);
+
+  --radius: 0.5rem;
+
+  --color-sidebar-background: hsl(0 0% 100%);
+  --color-sidebar-foreground: hsl(240 10% 30%);
+  --color-sidebar-border: hsl(240 6% 92%);
+  --color-sidebar-accent: hsl(239 84% 97%);
+  --color-sidebar-accent-foreground: hsl(239 84% 50%);
+
+  --color-panel-background: hsl(0 0% 100%);
+  --color-panel-border: hsl(240 6% 92%);
+
+  --color-folder-background: hsl(39 100% 95%);
+  --color-folder-foreground: hsl(39 100% 40%);
+  --color-folder-hover: hsl(39 100% 90%);
+
+  --color-file-hover: hsl(240 5% 97%);
+  --color-file-selected: hsl(239 84% 97%);
+  --color-file-selected-border: hsl(239 84% 80%);
+
+  --color-success: hsl(142 76% 36%);
+  --color-success-foreground: hsl(0 0% 100%);
+
+  --color-warning: hsl(38 92% 50%);
+  --color-warning-foreground: hsl(0 0% 100%);
+
+  --color-info: hsl(199 89% 48%);
+  --color-info-foreground: hsl(0 0% 100%);
+
+  /* Font families */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Dark theme variables - using CSS custom properties */
+:root {
+  --color-dark-background: hsl(240 10% 8%);
+  --color-dark-foreground: hsl(0 0% 95%);
+  --color-dark-card: hsl(240 10% 10%);
+  --color-dark-card-foreground: hsl(0 0% 95%);
+  --color-dark-popover: hsl(240 10% 10%);
+  --color-dark-popover-foreground: hsl(0 0% 95%);
+  --color-dark-primary: hsl(239 84% 67%);
+  --color-dark-primary-foreground: hsl(0 0% 100%);
+  --color-dark-secondary: hsl(240 5% 18%);
+  --color-dark-secondary-foreground: hsl(0 0% 85%);
+  --color-dark-muted: hsl(240 5% 18%);
+  --color-dark-muted-foreground: hsl(240 5% 60%);
+  --color-dark-accent: hsl(239 84% 67%);
+  --color-dark-accent-foreground: hsl(0 0% 100%);
+  --color-dark-destructive: hsl(0 72% 51%);
+  --color-dark-destructive-foreground: hsl(0 0% 100%);
+  --color-dark-border: hsl(240 5% 20%);
+  --color-dark-input: hsl(240 5% 20%);
+  --color-dark-ring: hsl(239 84% 67%);
+  --color-dark-sidebar-background: hsl(240 10% 10%);
+  --color-dark-sidebar-foreground: hsl(0 0% 80%);
+  --color-dark-sidebar-border: hsl(240 5% 18%);
+  --color-dark-sidebar-accent: hsl(239 50% 20%);
+  --color-dark-sidebar-accent-foreground: hsl(239 84% 70%);
+  --color-dark-panel-background: hsl(240 10% 10%);
+  --color-dark-panel-border: hsl(240 5% 18%);
+  --color-dark-folder-background: hsl(39 50% 15%);
+  --color-dark-folder-foreground: hsl(39 80% 60%);
+  --color-dark-folder-hover: hsl(39 50% 20%);
+  --color-dark-file-hover: hsl(240 5% 15%);
+  --color-dark-file-selected: hsl(239 50% 18%);
+  --color-dark-file-selected-border: hsl(239 60% 50%);
+  --color-dark-success: hsl(142 70% 45%);
+  --color-dark-warning: hsl(38 90% 55%);
+  --color-dark-info: hsl(199 85% 55%);
+}
+
+/* Dark theme class */
+.dark {
+  --color-background: var(--color-dark-background);
+  --color-foreground: var(--color-dark-foreground);
+  --color-card: var(--color-dark-card);
+  --color-card-foreground: var(--color-dark-card-foreground);
+  --color-popover: var(--color-dark-popover);
+  --color-popover-foreground: var(--color-dark-popover-foreground);
+  --color-primary: var(--color-dark-primary);
+  --color-primary-foreground: var(--color-dark-primary-foreground);
+  --color-secondary: var(--color-dark-secondary);
+  --color-secondary-foreground: var(--color-dark-secondary-foreground);
+  --color-muted: var(--color-dark-muted);
+  --color-muted-foreground: var(--color-dark-muted-foreground);
+  --color-accent: var(--color-dark-accent);
+  --color-accent-foreground: var(--color-dark-accent-foreground);
+  --color-destructive: var(--color-dark-destructive);
+  --color-destructive-foreground: var(--color-dark-destructive-foreground);
+  --color-border: var(--color-dark-border);
+  --color-input: var(--color-dark-input);
+  --color-ring: var(--color-dark-ring);
+  --color-sidebar-background: var(--color-dark-sidebar-background);
+  --color-sidebar-foreground: var(--color-dark-sidebar-foreground);
+  --color-sidebar-border: var(--color-dark-sidebar-border);
+  --color-sidebar-accent: var(--color-dark-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--color-dark-sidebar-accent-foreground);
+  --color-panel-background: var(--color-dark-panel-background);
+  --color-panel-border: var(--color-dark-panel-border);
+  --color-folder-background: var(--color-dark-folder-background);
+  --color-folder-foreground: var(--color-dark-folder-foreground);
+  --color-folder-hover: var(--color-dark-folder-hover);
+  --color-file-hover: var(--color-dark-file-hover);
+  --color-file-selected: var(--color-dark-file-selected);
+  --color-file-selected-border: var(--color-dark-file-selected-border);
+  --color-success: var(--color-dark-success);
+  --color-warning: var(--color-dark-warning);
+  --color-info: var(--color-dark-info);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in hsl, var(--color-muted-foreground) 30%, transparent);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: color-mix(in hsl, var(--color-muted-foreground) 30%, transparent);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in hsl, var(--color-muted-foreground) 50%, transparent);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background-color: color-mix(in hsl, var(--color-panel-background) 80%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-panel-border);
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    transition-property: all;
+    transition-duration: 200ms;
+    color: var(--color-sidebar-foreground);
+  }
+
+  .sidebar-item:hover {
+    background-color: var(--color-sidebar-accent);
+    color: var(--color-sidebar-accent-foreground);
+  }
+
+  .sidebar-item-active {
+    background-color: var(--color-sidebar-accent);
+    color: var(--color-sidebar-accent-foreground);
+  }
+
+  .folder-card {
+    background-color: var(--color-folder-background);
+    color: var(--color-folder-foreground);
+    border-radius: 0.75rem;
+    padding: 1.2rem;
+    transition-property: all;
+    transition-duration: 200ms;
+    cursor: pointer;
+    border: 1px solid transparent;
+    height: max-content;
+  }
+
+  .folder-card:hover {
+    background-color: var(--color-folder-hover);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px -1px rgba(88, 59, 4, 0.1), 0 2px 4px -2px rgba(66, 42, 5, 0.1);
+    border-color: color-mix(in hsl, var(--color-folder-foreground) 20%, transparent);
+  }
+
+  .file-row {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    transition-property: all;
+    transition-duration: 150ms;
+    cursor: pointer;
+  }
+
+  .file-row:hover {
+    background-color: var(--color-file-hover);
+  }
+
+  .file-row-selected {
+    background-color: var(--color-file-selected);
+    border: 1px solid var(--color-file-selected-border);
+  }
+
+  .action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+
+  .action-button:active {
+    transform: scale(0.98);
+  }
+
+  .action-button-primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  .action-button-primary:hover {
+    background-color: color-mix(in hsl, var(--color-primary) 90%, transparent);
+  }
+
+  .action-button-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-foreground);
+  }
+
+  .action-button-secondary:hover {
+    background-color: color-mix(in hsl, var(--color-secondary) 80%, transparent);
+  }
+
+  .action-button-ghost {
+    color: var(--color-muted-foreground);
+  }
+
+  .action-button-ghost:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-foreground);
+  }
+
+  .action-button-danger {
+    background-color: color-mix(in hsl, var(--color-destructive) 10%, transparent);
+    color: var(--color-destructive);
+  }
+
+  .action-button-danger:hover {
+    background-color: var(--color-destructive);
+    color: var(--color-destructive-foreground);
+  }
+
+  .input-field {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    color: var(--color-foreground);
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+
+  .input-field::placeholder {
+    color: var(--color-muted-foreground);
+  }
+
+  .input-field:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px color-mix(in hsl, var(--color-primary) 50%, transparent);
+    border-color: var(--color-primary);
+  }
+
+  .breadcrumb-item {
+    color: var(--color-muted-foreground);
+    transition-property: color;
+    transition-duration: 200ms;
+    cursor: pointer;
+  }
+
+  .breadcrumb-item:hover {
+    color: var(--color-foreground);
+  }
+
+  .breadcrumb-item-current {
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+}
+
+/* Animation classes */
+@layer utilities {
+  .animate-in {
+    animation-name: animate-in;
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+
+  .fade-in {
+    animation-name: fade-in;
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+
+  .slide-in-right {
+    animation-name: slide-in-right;
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+/* Focus states */
+@layer base {
+  *:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 0.125rem;
+  }
+}
+
+/* Selection styles */
+@layer base {
+  ::selection {
+    background-color: color-mix(in hsl, var(--color-primary) 40%, transparent);
+    color: var(--color-primary-foreground);
+  }
+}
