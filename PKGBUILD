@@ -1,7 +1,7 @@
 # Maintainer: enos muthiani @lyznne <emuthiani26@gmail.com>
 pkgname=peek-cli
 project=peek
-pkgver=0.1.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="A simple file viewer that opens files in the default web browser."
 arch=('x86_64')
@@ -21,7 +21,7 @@ build() {
     pnpm install --frozen-lockfile
     pnpm build
     cd ..
-    
+
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
     cargo build --release --locked
