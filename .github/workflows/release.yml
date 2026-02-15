@@ -202,7 +202,7 @@ jobs:
 
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
-          TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/tags/v${VERSION}.tar.gz"
+          TARBALL_URL="https://github.com/${{ github.repository }}/archive/v${VERSION}.tar.gz"
           SHA256=$(curl -sL "$TARBALL_URL" | sha256sum | awk '{print $1}')
           sed -i "s/sha256sums=('.*')/sha256sums=('${SHA256}')/" PKGBUILD
 
