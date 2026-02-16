@@ -12,6 +12,7 @@ options=(!strip)
 
 
 source=("${pkgname}-${pkgver}-linux-x86_64-musl.tar.gz::https://github.com/lyznne/peek/releases/download/v${pkgver}/peek-linux-x86_64-musl.tar.gz")
+
 sha256sums=('SKIP')
 
 package() {

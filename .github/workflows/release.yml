@@ -198,39 +198,33 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           cd aur-repo
 
-          # Copy fresh PKGBUILD from repo root
           cp ../PKGBUILD PKGBUILD
 
-          # Update version & release
           sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
 
-          # Musl binary
           MUSL_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/peek-linux-x86_64-musl.tar.gz"
-
-          # Compute real SHA256
           SHA256_MUSL=$(curl -sL --fail "$MUSL_URL" | sha256sum | cut -d' ' -f1)
+
           if [ -z "$SHA256_MUSL" ]; then
-            echo "Error: Failed to fetch or hash musl binary from $MUSL_URL"
+            echo "Error: Failed to hash musl binary"
             exit 1
           fi
 
-          echo "Musl SHA256: $SHA256_MUSL"
+          # naming: local = peek-cli-VERSION-... , remote = peek-...
+          cat > temp_patch << EOF
+            source=("${pkgname}-${pkgver}-linux-x86_64-musl.tar.gz::${MUSL_URL}")
+            sha256sums=('${SHA256_MUSL}')
+            EOF
 
-          # Completely replace source and sha256sums sections
-          cat > PKGBUILD.new << EOF
-          source=("${pkgname}-${pkgver}-linux-x86_64-musl.tar.gz::${MUSL_URL}")
-          sha256sums=('${SHA256_MUSL}')
-          EOF
-
-          # Remove old source/sha256 lines and append new ones at the end
+          # Remove old source & sha256 blocks
           sed -i '/^source=(/,/^)/d' PKGBUILD
           sed -i '/^sha256sums=(/,/^)/d' PKGBUILD
 
-          cat PKGBUILD.new >> PKGBUILD
-          rm PKGBUILD.new
+          # Append new ones
+          cat temp_patch >> PKGBUILD
+          rm temp_patch
 
-          # Remove noextract if present (no longer needed)
           sed -i '/^noextract=/d' PKGBUILD
 
       - name: Generate .SRCINFO
