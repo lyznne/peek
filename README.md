@@ -28,7 +28,7 @@
 </div>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lyznne/peek/main/screenshots/peek-light.png" alt="Peek CLI in action" width="800" style="border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 2rem 0;">
+  <img src="./screenshots/peek-light.png" alt="Peek CLI in action" width="800" style="border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 2rem 0;">
   <p style="font-size:1.1em; color:#70fb9e; margin-top:1rem;">
     Instantly preview PDFs, images, videos, code, markdown — right in your browser.
   </p>
@@ -56,7 +56,7 @@ Perfect for developers, designers, writers, sysadmins — anyone who needs quick
 ---
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lyznne/peek/main/screenshots/peek-dark.png" alt="Multiple file types preview" width="800" style="border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin: 1.5rem 0;">
+  <img src="./screenshots/peek-dark.png" alt="Multiple file types preview" width="800" style="border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin: 1.5rem 0;">
   <p style="font-size:1.1em; color:#70fb9e; margin:1rem 0;">
     PDFs • Images • Videos • Code • Markdown • All in one clean interface
   </p>
@@ -75,7 +75,7 @@ Perfect for developers, designers, writers, sysadmins — anyone who needs quick
 - Available on **AUR**, **Crates.io**, **GitHub Releases**
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lyznne/peek/main/screenshots/code-preview.png" alt="Code with syntax highlighting" width="720" style="border-radius:10px; margin: 1.5rem 0;">
+  <img src="./screenshots/code-preview.png" alt="Code with syntax highlighting" width="720" style="border-radius:10px; margin: 1.5rem 0;">
   <p style="color:#70fb9e;">Syntax-highlighted Rust, Python, JS, Markdown & more</p>
 </div>
 
@@ -145,7 +145,7 @@ peek --no-server secret.pdf
 ---
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lyznne/peek/main/screenshots/pdf-preview.png" alt="PDF preview example" width="720" style="border-radius:10px; margin: 1.5rem 0;">
+  <img src="./screenshots/pdf-preview.png" alt="PDF preview example" width="720" style="border-radius:10px; margin: 1.5rem 0;">
   <p style="color:#70fb9e; font-size:1.1em;">
     Smooth PDF viewing — zoom, scroll, search inside documents
   </p>
@@ -179,7 +179,7 @@ pnpm dev
 ---
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lyznne/peek/main/screenshots/folder-browse.png" alt="Folder browsing view" width="720" style="border-radius:10px; margin: 1.5rem 0;">
+  <img src="./screenshots/folder-browse.png" alt="Folder browsing view" width="720" style="border-radius:10px; margin: 1.5rem 0;">
   <p style="color:#70fb9e;">
     Clean directory listing — folders, files, sizes, dates
   </p>
