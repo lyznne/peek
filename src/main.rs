@@ -50,7 +50,7 @@ fn run() -> Result<()> {
     if cli.status {
         match daemon::read_pid_file() {
             Some(info) => println!(
-                " peek daemon running  •  pid {}  •  http://localhost:{}",
+                " 🚀 peek  running on Browser •  pid {}  •  http://localhost:{}",
                 info.pid, info.port
             ),
             None => println!("  No peek daemon is currently running."),

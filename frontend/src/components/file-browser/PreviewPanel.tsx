@@ -332,10 +332,10 @@ const NoSelection = () => {
                     Quick Actions
                 </h4>
                 <div className="space-y-2">
-                    <button onClick={handleNewFolder} className="action-button action-button-secondary w-full justify-start">
+                    <button disabled onClick={handleNewFolder} className="action-button action-button-secondary w-full justify-start">
                         <FolderPlus className="w-4 h-4" /> New Folder
                     </button>
-                    <button onClick={handleUpload} className="action-button action-button-secondary w-full justify-start">
+                    <button disabled onClick={handleUpload} className="action-button action-button-secondary w-full justify-start">
                         <Upload className="w-4 h-4" /> Upload Files
                     </button>
                 </div>

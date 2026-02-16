@@ -46,7 +46,7 @@ export interface FilePreview {
 }
 
 export interface SearchResponse {
-    items: FileItem[];
+    matches: FileItem[];
     query: string;
     total: number;
 }

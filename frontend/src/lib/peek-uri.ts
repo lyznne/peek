@@ -84,27 +84,25 @@ export function setPeekAddressBar(path: string, title?: string): void {
         const pageTitle = buildTitle(path, title);
 
         window.history.replaceState(
-            { peekPath: path },       // recoverable state
-            '',                       // title arg (browsers ignore it)
-            browseUrl                 // real same-origin URL in address bar
+            { peekPath: path },
+            '',
+            browseUrl
         );
 
-        // Show the peek:// URI in the tab title — closest we can get without
-        // a custom scheme.
-        document.title = `${peekUri} — Peek`;
+        document.title = `${peekUri} – ${pageTitle} • Peek`;
+        // document.title = `${peekUri} — Peek`;
 
-        // Stash current path globally for `currentPeekUri()`.
         (window as Window & { __PEEK_CURRENT_PATH__?: string }).__PEEK_CURRENT_PATH__ = path;
 
-        void pageTitle; // suppress unused warning
+        void pageTitle;
     } catch (err) {
         console.warn('[peek-uri] replaceState failed:', err);
     }
 }
 
 /**
- * Push a new History entry (adds a back-stack entry).
- * Use this for explicit navigations (clicking a folder, navigating up/back).
+ * Push a new History entry
+ * Use this for explicit navigations
  */
 export function pushPeekAddressBar(path: string, title?: string): void {
     try {
@@ -118,7 +116,9 @@ export function pushPeekAddressBar(path: string, title?: string): void {
             browseUrl
         );
 
-        document.title = `${peekUri} — Peek`;
+        document.title = `${peekUri} – ${pageTitle} • Peek`;
+
+        // document.title = `${peekUri} — Peek`;
         (window as Window & { __PEEK_CURRENT_PATH__?: string }).__PEEK_CURRENT_PATH__ = path;
 
         void pageTitle;

@@ -2,8 +2,6 @@
  * Browse API module
  * This module provides browsing functionality for files and directories.
  */
-// File: src/api/browse.rs
-
 use crate::config::Settings;
 use crate::errors::PeekError;
 use crate::models::{BrowseQuery, BrowseResponse, DocumentQuery, FileInfoResponse};
@@ -26,7 +24,7 @@ pub async fn browse_directory(
     let items = file_service::list_directory(&path, query.recursive, query.show_hidden)?;
 
     let total_size: u64 = items.iter().filter(|i| !i.is_dir).map(|i| i.size).sum();
-    let total_items = items.len(); // capture before items is moved into the struct
+    let total_items = items.len();
 
     let response = BrowseResponse {
         current_path: path.display().to_string(),
@@ -64,6 +62,8 @@ pub async fn file_info(
         readable,
         writable,
         executable,
+        created: None,
+        permissions: None,
     };
 
     Ok(HttpResponse::Ok().json(response))
@@ -107,7 +107,7 @@ pub async fn view_document(
 /// Returns the directory the CLI was invoked with so the frontend
 /// can navigate there on first load.
 pub async fn api_initial_path(
-    state: web::Data<Arc<Settings>>,  
+    state: web::Data<Arc<Settings>>,
 ) -> HttpResponse {
     let path = state
         .initial_path

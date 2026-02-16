@@ -31,7 +31,7 @@ export const MainContent = () => {
             if (searchQuery.trim()) {
                 setIsSearching(true);
                 const res = await apiService.search(searchQuery, currentPath);
-                setItems(res.items ?? []);  
+                setItems(res.matches ?? []);
             } else {
                 const res = await apiService.browse(currentPath, showHidden);
                 setItems(res.items ?? []);
@@ -65,7 +65,7 @@ export const MainContent = () => {
             }
 
             // ── File system change events ─────────────────────────────────────
-            // Only re-fetch if the changed path lives inside currentPath
+          
             const changedPath = (msg as any).path as string | undefined;
             if (changedPath && !changedPath.startsWith(currentPath)) return;
 

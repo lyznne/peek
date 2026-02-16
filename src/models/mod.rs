@@ -7,11 +7,12 @@ pub struct FileItem {
     pub is_dir: bool,
     pub size: u64,
     pub modified: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mime_type: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub children_count: Option<usize>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub extension: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub children_count: Option<usize>,
     #[serde(default)]
     pub is_hidden: bool,
 }
@@ -51,11 +52,16 @@ pub struct SearchResponse {
 
 #[derive(Debug, Serialize)]
 pub struct FileInfoResponse {
-    pub item: FileItem,
+ pub item: FileItem,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parent_path: Option<String>,
     pub readable: bool,
     pub writable: bool,
     pub executable: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub permissions: Option<String>, 
 }
 
 

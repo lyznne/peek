@@ -11,7 +11,10 @@ import {
     FileType,
     FileJson,
     FileCog,
-    type LucideIcon
+    type LucideIcon,
+    AppWindow,
+    Cpu,
+    TerminalSquare
 } from 'lucide-react';
 
 export const formatFileSize = (bytes: number): string => {
@@ -25,7 +28,7 @@ export const formatFileSize = (bytes: number): string => {
 };
 
 export const formatDate = (timestamp: number): string => {
-    const date = new Date(timestamp);
+    const date = new Date(timestamp*1000);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
 
@@ -51,8 +54,8 @@ export const formatDate = (timestamp: number): string => {
 export const getFileIcon = (item: { is_dir: boolean; extension?: string; mime_type?: string | null }): LucideIcon => {
     if (item.is_dir) return Folder;
 
-    const ext = item.extension?.toLowerCase();
-    const mime = item.mime_type?.toLowerCase() || '';
+    const ext = item.extension?.toLowerCase() ?? '';
+    const mime = item.mime_type?.toLowerCase() ?? '';
 
     // Images
     if (mime.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'ico', 'bmp'].includes(ext || '')) {
@@ -102,6 +105,30 @@ export const getFileIcon = (item: { is_dir: boolean; extension?: string; mime_ty
     // Text files
     if (mime.startsWith('text/') || ['txt', 'md', 'markdown', 'log'].includes(ext || '')) {
         return FileText;
+    }
+
+    // exe files and batch
+    // ── Executables / Binaries ────────────────────────────────────────────
+    const executableExts = [
+        // Windows
+        'exe', 'msi', 'bat', 'cmd', 'ps1', 'vbs', 'jar', 'scr',
+        // Linux / macOS / cross-platform
+        'app', 'bin', 'run', 'out', 'elf', 'so', 'dylib', 'dll',
+        // Scripts that behave like executables
+        'sh', 'bash', 'zsh', 'fish', 'ksh', 'csh', 'py', 'rb', 'pl', 'php',
+    ];
+
+    if (executableExts.includes(ext)) {
+        if (['exe', 'msi', 'bat', 'cmd', 'ps1', 'vbs', 'scr'].includes(ext)) {
+            return AppWindow;
+        }
+        // Linux/macOS native binaries or shared libs
+        if (['bin', 'out', 'elf', 'so', 'dylib', 'app'].includes(ext)) {
+            return Cpu;
+        }
+
+
+        return TerminalSquare;
     }
 
     return File;
