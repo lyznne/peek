@@ -188,7 +188,7 @@ jobs:
 
       - name: Clone AUR repository
         run: |
-          git clone ssh://aur@aur.archlinux.org/peek-cli.git aur-repo || {
+          git clone ssh://aur@aur.archlinux.org/peek-bin.git aur-repo || {
             echo "Failed to clone AUR repo. Make sure the package exists on AUR first!"
             exit 1
           }
