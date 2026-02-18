@@ -8,7 +8,7 @@ use std::time::Duration;
 
 
 
-/// Open with system default (original CLI behavior)
+/// Open with system default
 pub fn open_with_system(path: &Path) -> Result<()> {
     if !path.exists() {
         return Err(PeekError::FileNotFound(path.display().to_string()).into());
@@ -65,13 +65,12 @@ pub fn open_with_server(path: &Path, _hint_port: u16) -> Result<()> {
     let port = daemon::find_free_port()
         .context("Could not find a free port")?;
 
-    // Fork.  On Unix the parent prints and exits here; only the child
-    // continues past this point.  On Windows this is a no-op.
+
     daemon::daemonize(port)?;
 
     // ── Everything below runs only in the child (or on Windows) ──────────────
 
-    // Spawn the actix server on a background thread inside the child process
+   
     let serve_root_clone = serve_root.clone();
     thread::spawn(move || {
         if let Err(e) = server::start_server(

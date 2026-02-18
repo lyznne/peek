@@ -20,7 +20,7 @@ export function toPeekUri(path: string): string {
 
 /**
  * Convert an internal filesystem path to the routable browser URL.
- * This is what gets pushed to History so the browser stays same-origin.
+ * This  gets pushed to History so the browser stays same-origin.
  *
  * '/'                  → '/browse'
  * '/home/user/docs'    → '/browse/home/user/docs'
@@ -75,7 +75,7 @@ function buildTitle(path: string, override_?: string): string {
  * Replace the current History entry.
  * Address bar shows /browse/<path>; document title shows "peek://<path>".
  *
- * Call this for in-place updates (e.g. selecting a file within the same dir).
+ * Call this for in-place updates .
  */
 export function setPeekAddressBar(path: string, title?: string): void {
     try {
@@ -102,7 +102,7 @@ export function setPeekAddressBar(path: string, title?: string): void {
 
 /**
  * Push a new History entry
- * Use this for explicit navigations
+ * Use  for explicit navigations
  */
 export function pushPeekAddressBar(path: string, title?: string): void {
     try {

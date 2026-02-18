@@ -35,16 +35,16 @@ pub fn start_server(host: String, port: u16, initial_path: Option<String>) -> Re
     settings.initial_path = resolved_path.clone();
     let state = Arc::new(settings);
 
-    // Shared broadcaster — navigate events from POST /api/navigate fan out to
+    // Shared broadcaster — ( -- navigate events from POST /api/navigate fan out to)
     // all connected WebSocket clients
     let broadcaster = Broadcaster::new();
 
     let addr = format!("{}:{}", host, port);
 
-    tracing::info!("🚀 Peek File Browser Server");
-    tracing::info!("📡 Running at http://{}", addr);
+    tracing::info!("✓ Peek File Browser Server");
+    tracing::info!("✓ Running at http://{}", addr);
     if let Some(ref p) = resolved_path {
-        tracing::info!("📁 Initial path: {}", p);
+        tracing::info!("✓  Initial path: {}", p);
     }
 
     actix_web::rt::System::new().block_on(async move {

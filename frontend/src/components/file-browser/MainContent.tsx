@@ -61,11 +61,11 @@ export const MainContent = () => {
 
         const unsub = ws.subscribe((msg: WsMessage) => {
             if (msg.type === 'pong' || msg.type === 'watch_started' || msg.type === 'navigate') {
-                return; // handled elsewhere
+                return;
             }
 
             // ── File system change events ─────────────────────────────────────
-          
+
             const changedPath = (msg as any).path as string | undefined;
             if (changedPath && !changedPath.startsWith(currentPath)) return;
 
@@ -73,7 +73,7 @@ export const MainContent = () => {
                 case 'file_added':
                 case 'file_removed':
                 case 'file_modified':
-                case 'file_changed':   // legacy alias from older backend versions
+                case 'file_changed':
                     fetchCurrent();
                     break;
             }
@@ -81,9 +81,7 @@ export const MainContent = () => {
 
         return () => {
             unsub();
-            // Do NOT call ws.disconnect() here — the socket is a singleton
-            // shared across components; disconnecting here would break other
-            // subscribers (e.g. the navigate handler in App.tsx).
+
         };
     }, [currentPath, fetchCurrent]);
 
@@ -92,7 +90,7 @@ export const MainContent = () => {
     const folders = items.filter(i =>  i.is_dir);
     const files   = items.filter(i => !i.is_dir);
 
-    // Client-side filter for the search box (instant, no extra API call)
+    // Client-side filter for the search box 
     const filteredFolders = searchQuery
         ? folders.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
         : folders;

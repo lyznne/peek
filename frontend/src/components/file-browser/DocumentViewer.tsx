@@ -120,7 +120,7 @@ export const DocumentViewer = ({
                     const lang = langProp ?? langFromName(name);
                     setContentState({ kind: 'code', text, language: lang, lines });
                 } else if (isTextType(mimeType)) {
-                    // Generic text/plain — check extension to decide code vs plain
+                    // Generic text/plain — check extension
                     const lang = langProp ?? langFromName(name);
                     if (lang) {
                         setContentState({ kind: 'code', text, language: lang, lines });
@@ -311,7 +311,7 @@ export const DocumentViewer = ({
             }
 
             case 'markdown':
-                // Wrap in bg-background so prose colours are correct in both light & dark
+              
                 return (
                     <div className="h-full overflow-auto bg-background">
                         <div className="max-w-4xl mx-auto p-6">

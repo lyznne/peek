@@ -115,7 +115,7 @@ export const CodePreview = ({ code, language, lines }: { code: string; language?
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ShikiCodeBlock — used inside MarkdownPreview for fenced code blocks
+// ShikiCodeBlock
 // ─────────────────────────────────────────────────────────────────────────────
 const ShikiCodeBlock = ({ code, language }: { code: string; language?: string }) => {
     const [highlightedCode, setHighlightedCode] = useState<string>('<code>Loading...</code>');
@@ -155,7 +155,7 @@ const ShikiCodeBlock = ({ code, language }: { code: string; language?: string })
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MarkdownPreview — now exported so DocumentViewer can import and reuse it
+// MarkdownPreview
 // ─────────────────────────────────────────────────────────────────────────────
 export const MarkdownPreview = ({ content }: { content: string }) => {
     const [html, setHtml] = useState<string>('');
@@ -561,7 +561,7 @@ const FileDetails = () => {
             );
         }
 
-        // Image — use thumbnail from the preview API (not a raw URL, so no SPA issue)
+        // Image 
         if (isImage && preview.thumbnail) {
             return (
                 <div className="flex flex-col items-center justify-center h-full gap-3">

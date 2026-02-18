@@ -3,6 +3,7 @@ pkgname=peek-cli
 pkgver=2.0.7
 pkgrel=1
 pkgdesc="A simple, fast file viewer that opens files in your default web browser"
+keywords=('file viewer' 'browser' 'cli')
 arch=('x86_64')
 url="https://github.com/lyznne/peek"
 license=('MIT' 'Apache-2.0')

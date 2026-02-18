@@ -147,7 +147,7 @@ export async function printDocument(
                 iframe.src = content.url;
             }
         } else {
-            // Text-based content — write HTML into the iframe
+            // Text-based content
             iframe.onload = () => {
                 const doc = iframe.contentDocument!;
                 doc.open();
@@ -278,5 +278,3 @@ const CODE_PRINT_CSS = `
     }
     code { font-family: inherit; }
 `;
-
-

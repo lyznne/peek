@@ -133,7 +133,7 @@ pub fn daemonize(port: u16) -> Result<()> {
 
         child_pid => {
             // ── print info and exit ───────────────────────────────
-            println!("🔍 peek  •  running on port {}  •  pid {}", port, child_pid);
+            println!("✓ peek  •  running on port {}  •  pid {}", port, child_pid);
             println!("   Use `peek --kill` to stop the background server.");
             std::process::exit(0);
         }

@@ -13,7 +13,7 @@ pub fn validate_path(path_str: &str, settings: &Settings) -> Result<PathBuf, Pee
         )));
     }
 
-    // Canonicalize to resolve .. and symlinks (prevents path traversal)
+    // Canonicalize to resolve .. and symlinks
     let canonical = path.canonicalize().map_err(|e| {
         PeekError::BadRequest(format!("Invalid path: {}", e))
     })?;

@@ -9,7 +9,7 @@ use serde_json::json;
 pub async fn health_check() -> HttpResponse {
     HttpResponse::Ok().json(json!({
         "status": "healthy",
-        "version": "1.0.0",
+        "version": "2.0.10",
         "service": "peek"
     }))
 }

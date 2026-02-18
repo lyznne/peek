@@ -1,6 +1,6 @@
 [package]
-name = "peek-cli"
-version = "2.0.0"
+name = "peek"
+version = "2.0.9"
 edition = "2024"
 authors = ["Enos Muthiani @lyznne <emuthiani26@gmail.com>"]
 description = "A fast CLI tool to open files and directories in your default browser with CLI and web UI"
@@ -67,5 +67,5 @@ panic = "abort"
 
 
 [[bin]]
-name = "peek-cli"
+name = "peek"
 path = "src/main.rs"

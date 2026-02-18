@@ -2,7 +2,7 @@ import { useFileBrowserStore } from '@/store/filebrowser-store';
 import { apiService } from './api';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Message types 
+// Message types
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type WsMessage =
@@ -11,7 +11,7 @@ export type WsMessage =
     | { type: 'file_added';    path: string }
     | { type: 'file_removed';  path: string }
     | { type: 'file_modified'; path: string }
-    | { type: 'file_changed';  path: string }   
+    | { type: 'file_changed';  path: string }
     | { type: 'pong' };
 
 type Subscriber = (msg: WsMessage) => void;
@@ -62,7 +62,7 @@ class PeekWebSocket {
         };
 
         this.ws.onerror = () => {
-            // onclose fires immediately after onerror — reconnect handled there
+            // onclose fires immediately after onerror — 
             this.ws?.close();
         };
     }
@@ -103,7 +103,7 @@ class PeekWebSocket {
         return () => this.subscribers.delete(fn);
     }
 
-    // ── Internal 
+    // ── Internal
 
     private dispatch(msg: WsMessage): void {
         // 1. Built-in handler for store-level events (navigate)
@@ -131,7 +131,7 @@ class PeekWebSocket {
                 break;
 
             // file_* events are handled by component subscribers
-            // so we do nothing 
+            // so we do nothing
         }
     }
 }
