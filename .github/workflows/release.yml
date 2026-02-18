@@ -76,7 +76,7 @@ jobs:
       - name: Strip binary (Unix)
         if: matrix.os != 'windows-latest'
         run: |
-          strip target/${{ matrix.target }}/release/peek-cli || true
+          strip target/${{ matrix.target }}/release/peek || true
 
       - name: Package binary
         shell: bash
