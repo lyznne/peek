@@ -8,7 +8,7 @@ arch=('x86_64')
 url="https://github.com/lyznne/peek"
 license=('MIT' 'Apache-2.0')
 provides=("${pkgname}")
-conflicts=("${pkgname}-git", "${pkgname%-bin}", "peek-cli")
+conflicts=("${pkgname}-git" "${pkgname%-bin}" "peek-cli")
 options=(!strip)
 
 
