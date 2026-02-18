@@ -84,14 +84,14 @@ jobs:
           mkdir -p dist
           cd target/${{ matrix.target }}/release || exit 1
 
-          BIN="peek-cli"
+          BIN="peek"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            BIN="peek-cli.exe"
+            BIN="peek.exe"
           fi
 
           cp "$BIN" ../../../dist/
 
-          # Copy completions + license + readme (from repo root)
+          # Copy completions + license + readme
           cp -r ../../../completions ../../../dist/
           cp ../../../LICENSE ../../../dist/
           cp ../../../README.md ../../../dist/
@@ -99,9 +99,9 @@ jobs:
           cd ../../../dist
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            7z a "peek-${{ matrix.name }}.zip" peek-cli.exe completions/ LICENSE README.md
+            7z a "peek-${{ matrix.name }}.zip" peek.exe completions/ LICENSE README.md
           else
-            tar czf "peek-${{ matrix.name }}.tar.gz" peek-cli completions/ LICENSE README.md
+            tar czf "peek-${{ matrix.name }}.tar.gz" peek completions/ LICENSE README.md
           fi
 
       - name: Generate checksums
@@ -211,7 +211,7 @@ jobs:
             exit 1
           fi
 
-          # naming: local = peek-cli-VERSION-... , remote = peek-...
+          # naming: local = peek-VERSION-... , remote = peek-...
           cat > temp_patch << EOF
             source=("${pkgname}-${pkgver}-linux-x86_64-musl.tar.gz::${MUSL_URL}")
             sha256sums=('${SHA256_MUSL}')

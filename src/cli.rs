@@ -17,7 +17,7 @@ pub const PEEK_LONG_ABOUT: &str = "A fast CLI tool to quicky open PDFs, images, 
   peek --no-server doc.pdf Open with system default (file://)
   peek --kill              Stop the background peek daemon
   peek --status            Show whether a daemon is running
-  peek serve               Foreground server (logs visible For debugging only)
+  peek serve               Foreground server (logs visible For debugging)
 ")]
 pub struct Cli {
     pub path: Option<String>,
